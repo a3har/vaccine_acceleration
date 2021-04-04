@@ -76,7 +76,7 @@ last_date = last_row['date']
 avg_vaccinations_per_day = last_row['avg_vaccinations_per_day']
 vaccine_administered = last_row['vaccine_administered']
 people_vaccinated = last_row['people_vaccinated']
-vaccination_rate_acceleration = df['vaccination_rate_acceleration'].mean()
+mean_vaccination_rate_acceleration = df['vaccination_rate_acceleration'].mean()
 
 
 ##  Uncomment line below if you want to see the changes in a csv file
@@ -89,6 +89,6 @@ print("\t\t\tVaccination rate"+printPercentage("{:,.2f}".format(vaccination_rate
 print("\t\t\tVaccinations per day :"+prYellow("{:,.2f}".format(avg_vaccinations_per_day)))
 print("\t\t\tPeople vaccinated on "+last_date.strftime('%d %B, %Y')+" : "+ "{:,.0f}".format(vaccine_administered))
 print("\t\t\tTotal vaccinated : "+ "{:,}".format(people_vaccinated))
-print("\t\t\tAcceleration mean : "+ prYellow("{:,.2f}".format(vaccination_rate_acceleration)+"%"))
+print("\t\t\tAcceleration mean : "+ prYellow("{:,.2f}".format(mean_vaccination_rate_acceleration)+"%"))
 print("\n\n\n******************************************************************************* \n\n")
 print('\n\nTime taken : '+"{:,.3f}".format(time.time()-start_time)+' seconds')
