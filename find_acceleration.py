@@ -56,12 +56,28 @@ if (not is_file_fetched_today()):
     open(CSV_NAME, 'wb').write(r.content)
 df = pd.read_csv(CSV_NAME, parse_dates=['date'])
 
-#   Creating extra columns for computation
+
+
+
+#   Creating extra columns for computation - Main Logic
 df['vaccine_administered'] = df['people_vaccinated'] -df['people_vaccinated'].shift(1)
 first_day = df.iloc[0]['date']
 df['avg_vaccinations_per_day'] = df['people_vaccinated'] / (df['date'] - first_day).dt.days
 df['vaccination_rate_acceleration'] = (df['avg_vaccinations_per_day'] -df['avg_vaccinations_per_day'].shift(1))*100 / df['avg_vaccinations_per_day'] 
+
 last_row = df.iloc[-1]
+
+
+
+
+# Calulated variables 
+vaccination_rate_acceleration = last_row['vaccination_rate_acceleration']
+last_date = last_row['date']
+avg_vaccinations_per_day = last_row['avg_vaccinations_per_day']
+vaccine_administered = last_row['vaccine_administered']
+people_vaccinated = last_row['people_vaccinated']
+vaccination_rate_acceleration = df['vaccination_rate_acceleration'].mean()
+
 
 ##  Uncomment line below if you want to see the changes in a csv file
 # df.to_csv('India_altered.csv')
@@ -69,10 +85,10 @@ last_row = df.iloc[-1]
 ## Printing the data in a clean way
 
 print("\n\n\n******************************************************************************* \n\n")
-print("\t\t\tVaccination rate"+printPercentage("{:,.2f}".format(last_row['vaccination_rate_acceleration'])))
-print("\t\t\tVaccinations per day :"+prYellow("{:,.2f}".format(last_row['avg_vaccinations_per_day'])))
-print("\t\t\tPeople vaccinated on "+last_row['date'].strftime('%d %B, %Y')+" : "+ "{:,.0f}".format(last_row['vaccine_administered']))
-print("\t\t\tTotal vaccinated : "+ "{:,}".format(last_row['people_vaccinated']))
-print("\t\t\tAcceleration mean : "+ prYellow("{:,.2f}".format(df['vaccination_rate_acceleration'].mean())+"%"))
+print("\t\t\tVaccination rate"+printPercentage("{:,.2f}".format(vaccination_rate_acceleration)))
+print("\t\t\tVaccinations per day :"+prYellow("{:,.2f}".format(avg_vaccinations_per_day)))
+print("\t\t\tPeople vaccinated on "+last_date.strftime('%d %B, %Y')+" : "+ "{:,.0f}".format(vaccine_administered))
+print("\t\t\tTotal vaccinated : "+ "{:,}".format(people_vaccinated))
+print("\t\t\tAcceleration mean : "+ prYellow("{:,.2f}".format(vaccination_rate_acceleration)+"%"))
 print("\n\n\n******************************************************************************* \n\n")
 print('\n\nTime taken : '+"{:,.3f}".format(time.time()-start_time)+' seconds')
