@@ -57,22 +57,11 @@ if (not is_file_fetched_today()):
 df = pd.read_csv(CSV_NAME, parse_dates=['date'])
 
 #   Creating extra columns for computation
-
-#People vaccinated today would be total people vaccinated today minus total people vaccinated yesterday
-df['vaccine_administered'] = (df['people_vaccinated'] - df['people_vaccinated'].shift(1))
-#Rate of increase in vaccine administration
-df['acceleration'] = (df['vaccine_administered'] - df['vaccine_administered'].shift(1)) *100 / df['vaccine_administered'].shift(1)
-
-##   Calculating average acceleration rate 
-
-#Average rate yesterday
-average_rate_before = df[:-1]['acceleration'].mean()
-average_rate_after = df['acceleration'].mean()
-rate_of_change = (average_rate_after - average_rate_before) * 100 / average_rate_before
-
-
+df['vaccine_administered'] = df['people_vaccinated'] -df['people_vaccinated'].shift(1)
+first_day = df.iloc[0]['date']
+df['avg_vaccinations_per_day'] = df['people_vaccinated'] / (df['date'] - first_day).dt.days
+df['vaccination_rate_acceleration'] = (df['avg_vaccinations_per_day'] -df['avg_vaccinations_per_day'].shift(1))*100 / df['avg_vaccinations_per_day'] 
 last_row = df.iloc[-1]
-
 
 ##  Uncomment line below if you want to see the changes in a csv file
 # df.to_csv('India_altered.csv')
@@ -80,9 +69,10 @@ last_row = df.iloc[-1]
 ## Printing the data in a clean way
 
 print("\n\n\n******************************************************************************* \n\n")
-print("\t\t\tVaccination acceleration"+printPercentage("{:,.2f}".format(rate_of_change)))
-print("\t\t\tCurrent vaccination acceleration :"+prYellow("{:,.2f}".format(average_rate_after)+"%"))
+print("\t\t\tVaccination acceleration"+printPercentage("{:,.2f}".format(last_row['vaccination_rate_acceleration'])))
+print("\t\t\tVaccinations per day :"+prYellow("{:,.2f}".format(last_row['avg_vaccinations_per_day'])))
 print("\t\t\tPeople vaccinated on "+last_row['date'].strftime('%d %B, %Y')+" : "+ "{:,.0f}".format(last_row['vaccine_administered']))
 print("\t\t\tTotal vaccinated : "+ "{:,}".format(last_row['people_vaccinated']))
+print("\t\t\tAcceleration mean : "+ prYellow("{:,.2f}".format(df['vaccination_rate_acceleration'].mean())+"%"))
 print("\n\n\n******************************************************************************* \n\n")
 print('\n\nTime taken : '+"{:,.3f}".format(time.time()-start_time)+' seconds')
