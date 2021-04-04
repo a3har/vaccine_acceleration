@@ -69,7 +69,7 @@ last_row = df.iloc[-1]
 ## Printing the data in a clean way
 
 print("\n\n\n******************************************************************************* \n\n")
-print("\t\t\tVaccination acceleration"+printPercentage("{:,.2f}".format(last_row['vaccination_rate_acceleration'])))
+print("\t\t\tVaccination rate"+printPercentage("{:,.2f}".format(last_row['vaccination_rate_acceleration'])))
 print("\t\t\tVaccinations per day :"+prYellow("{:,.2f}".format(last_row['avg_vaccinations_per_day'])))
 print("\t\t\tPeople vaccinated on "+last_row['date'].strftime('%d %B, %Y')+" : "+ "{:,.0f}".format(last_row['vaccine_administered']))
 print("\t\t\tTotal vaccinated : "+ "{:,}".format(last_row['people_vaccinated']))
