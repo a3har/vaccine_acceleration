@@ -4,7 +4,7 @@ import socket
 import os
 import datetime as dt
 import time
-
+import math
 
 #Functions to print in terminal as a different color. Not important
 def prRed(skk): return "\033[91m {}\033[00m" .format(skk)
@@ -17,7 +17,7 @@ def prLightGray(skk): return "\033[97m {}\033[00m" .format(skk)
 def prBlack(skk): return "\033[98m {}\033[00m" .format(skk)
 
 #Constants
-CSV_NAME = '/home/azhar/Documents/Projects/CovidVaccinationIndia/India.csv'
+CSV_NAME = 'India.csv'
 URL_FOR_INDIA_CSV = 'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/India.csv'
 
 def printPercentage(percentage):
@@ -78,17 +78,37 @@ vaccine_administered = last_row['vaccine_administered']
 people_vaccinated = last_row['people_vaccinated']
 mean_vaccination_rate_acceleration = df['vaccination_rate_acceleration'].mean()
 
+## Calculating days remaining using equations of motion 
+
+#v2=u2+2as
+#v=u+at
+def calculate_days_remaining(population,acceleration,initial_velocity):
+    people_remaining = population - last_row['people_vaccinated']
+    final_velocity_squared = 2*acceleration*people_remaining + initial_velocity*initial_velocity
+    final_velocity = math.sqrt(final_velocity_squared)
+    days_needed = (final_velocity - initial_velocity) / acceleration
+    return days_needed
+
+days_50 = calculate_days_remaining(500000000,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
+days_70 = calculate_days_remaining(700000000,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
+days_100 = calculate_days_remaining(1000000000,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
+optimistic_days_50 = calculate_days_remaining(500000000,vaccination_rate_acceleration,avg_vaccinations_per_day)
+optimistic_days_70 = calculate_days_remaining(700000000,vaccination_rate_acceleration,avg_vaccinations_per_day)
+optimistic_days_100 = calculate_days_remaining(1000000000,vaccination_rate_acceleration,avg_vaccinations_per_day)
 
 ##  Uncomment line below if you want to see the changes in a csv file
-# df.to_csv('India_altered.csv')
+df.to_csv('India_altered.csv')
 
 ## Printing the data in a clean way
 
 print("\n\n\n******************************************************************************* \n\n")
-print("\t\t\tVaccination rate"+printPercentage("{:,.2f}".format(vaccination_rate_acceleration)))
-print("\t\t\tVaccinations per day :"+prYellow("{:,.2f}".format(avg_vaccinations_per_day)))
-print("\t\t\tPeople vaccinated on "+last_date.strftime('%d %B, %Y')+" : "+ "{:,.0f}".format(vaccine_administered))
-print("\t\t\tTotal vaccinated : "+ "{:,}".format(people_vaccinated))
-print("\t\t\tAcceleration mean : "+ prYellow("{:,.2f}".format(mean_vaccination_rate_acceleration)+"%"))
+print("\t\tVaccination rate"+printPercentage("{:,.2f}".format(vaccination_rate_acceleration)))
+print("\t\tVaccinations per day :"+prYellow("{:,.2f}".format(avg_vaccinations_per_day)))
+print("\t\tPeople vaccinated on "+last_date.strftime('%d %B, %Y')+" : "+ "{:,.0f}".format(vaccine_administered))
+print("\t\tTotal vaccinated : "+ "{:,}".format(people_vaccinated))
+print("\t\tAcceleration mean : "+ prYellow("{:,.2f}".format(mean_vaccination_rate_acceleration)+"%"))
+print("\t\tEstimated days for vaccinating 50% : "+ prYellow("{:,.2f}".format(days_50) +" (" +"{:,.2f}".format(days_50/30) + " months)" +'\t Optmistic: ' + "{:,.2f}".format(optimistic_days_50) +" (" +"{:,.2f}".format(optimistic_days_50/30) + " months)"))
+print("\t\tEstimated days for vaccinating 70% : "+ prYellow("{:,.2f}".format(days_70) +" (" +"{:,.2f}".format(days_70/30) + " months)"+'\t Optmistic: ' + "{:,.2f}".format(optimistic_days_70) +" (" +"{:,.2f}".format(optimistic_days_70/30) + " months)"))
+print("\t\tEstimated days for vaccinating 100% : "+ prYellow("{:,.2f}".format(days_100) +" (" +"{:,.2f}".format(days_100/30) + " months)"+'\t Optmistic: ' + "{:,.2f}".format(optimistic_days_100) +" (" +"{:,.2f}".format(optimistic_days_100/30) + " months)"))
 print("\n\n\n******************************************************************************* \n\n")
 print('\n\nTime taken : '+"{:,.3f}".format(time.time()-start_time)+' seconds')
