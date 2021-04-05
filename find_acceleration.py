@@ -17,7 +17,7 @@ def prLightGray(skk): return "\033[97m {}\033[00m" .format(skk)
 def prBlack(skk): return "\033[98m {}\033[00m" .format(skk)
 
 #Constants
-CSV_NAME = 'India.csv'
+CSV_NAME = '/home/azhar/Documents/Projects/CovidVaccinationIndia/India.csv'
 URL_FOR_INDIA_CSV = 'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/India.csv'
 
 def printPercentage(percentage):
