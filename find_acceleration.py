@@ -19,6 +19,9 @@ def prBlack(skk): return "\033[98m {}\033[00m" .format(skk)
 #Constants
 CSV_NAME = 'India.csv'
 URL_FOR_INDIA_CSV = 'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/India.csv'
+POPULATION_50 = 500000000
+POPULATION_70 = 700000000
+POPULATION_100 = 1000000000
 
 def printPercentage(percentage):
     percentage = float(percentage)
@@ -56,19 +59,13 @@ if (not is_file_fetched_today()):
     open(CSV_NAME, 'wb').write(r.content)
 df = pd.read_csv(CSV_NAME, parse_dates=['date'])
 
-
-
-
 #   Creating extra columns for computation - Main Logic
 df['vaccine_administered'] = df['people_vaccinated'] -df['people_vaccinated'].shift(1)
 first_day = df.iloc[0]['date']
-df['avg_vaccinations_per_day'] = df['people_vaccinated'] / (df['date'] - first_day).dt.days
-df['vaccination_rate_acceleration'] = (df['avg_vaccinations_per_day'] -df['avg_vaccinations_per_day'].shift(1))*100 / df['avg_vaccinations_per_day'] 
+df['avg_vaccinations_per_day'] = df['vaccine_administered'].rolling(window=2).mean()
+df['vaccination_rate_acceleration'] = ((df['avg_vaccinations_per_day'] -df['avg_vaccinations_per_day'].shift(1))*100 / df['avg_vaccinations_per_day']).round(2) 
 
 last_row = df.iloc[-1]
-
-
-
 
 # Calulated variables 
 vaccination_rate_acceleration = last_row['vaccination_rate_acceleration']
@@ -89,12 +86,12 @@ def calculate_days_remaining(population,acceleration,initial_velocity):
     days_needed = (final_velocity - initial_velocity) / acceleration
     return days_needed
 
-days_50 = calculate_days_remaining(500000000,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
-days_70 = calculate_days_remaining(700000000,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
-days_100 = calculate_days_remaining(1000000000,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
-optimistic_days_50 = calculate_days_remaining(500000000,vaccination_rate_acceleration,avg_vaccinations_per_day)
-optimistic_days_70 = calculate_days_remaining(700000000,vaccination_rate_acceleration,avg_vaccinations_per_day)
-optimistic_days_100 = calculate_days_remaining(1000000000,vaccination_rate_acceleration,avg_vaccinations_per_day)
+days_50 = calculate_days_remaining(POPULATION_50,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
+days_70 = calculate_days_remaining(POPULATION_70,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
+days_100 = calculate_days_remaining(POPULATION_100,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
+optimistic_days_50 = calculate_days_remaining(POPULATION_50,vaccination_rate_acceleration,avg_vaccinations_per_day)
+optimistic_days_70 = calculate_days_remaining(POPULATION_70,vaccination_rate_acceleration,avg_vaccinations_per_day)
+optimistic_days_100 = calculate_days_remaining(POPULATION_100,vaccination_rate_acceleration,avg_vaccinations_per_day)
 
 ##  Uncomment line below if you want to see the changes in a csv file
 df.to_csv('India_altered.csv')
