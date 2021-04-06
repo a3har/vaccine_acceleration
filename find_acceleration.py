@@ -89,9 +89,6 @@ def calculate_days_remaining(population,acceleration,initial_velocity):
 days_50 = calculate_days_remaining(POPULATION_50,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
 days_70 = calculate_days_remaining(POPULATION_70,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
 days_100 = calculate_days_remaining(POPULATION_100,mean_vaccination_rate_acceleration,avg_vaccinations_per_day)
-optimistic_days_50 = calculate_days_remaining(POPULATION_50,vaccination_rate_acceleration,avg_vaccinations_per_day)
-optimistic_days_70 = calculate_days_remaining(POPULATION_70,vaccination_rate_acceleration,avg_vaccinations_per_day)
-optimistic_days_100 = calculate_days_remaining(POPULATION_100,vaccination_rate_acceleration,avg_vaccinations_per_day)
 
 ##  Uncomment line below if you want to see the changes in a csv file
 df.to_csv('India_altered.csv')
@@ -104,8 +101,8 @@ print("\t\tVaccinations per day :"+prYellow("{:,.2f}".format(avg_vaccinations_pe
 print("\t\tPeople vaccinated on "+last_date.strftime('%d %B, %Y')+" : "+ "{:,.0f}".format(vaccine_administered))
 print("\t\tTotal vaccinated : "+ "{:,}".format(people_vaccinated))
 print("\t\tAcceleration mean : "+ prYellow("{:,.2f}".format(mean_vaccination_rate_acceleration)+"%"))
-print("\t\tEstimated days for vaccinating 50% : "+ prYellow("{:,.2f}".format(days_50) +" (" +"{:,.2f}".format(days_50/30) + " months)" +'\t Optmistic: ' + "{:,.2f}".format(optimistic_days_50) +" (" +"{:,.2f}".format(optimistic_days_50/30) + " months)"))
-print("\t\tEstimated days for vaccinating 70% : "+ prYellow("{:,.2f}".format(days_70) +" (" +"{:,.2f}".format(days_70/30) + " months)"+'\t Optmistic: ' + "{:,.2f}".format(optimistic_days_70) +" (" +"{:,.2f}".format(optimistic_days_70/30) + " months)"))
-print("\t\tEstimated days for vaccinating 100% : "+ prYellow("{:,.2f}".format(days_100) +" (" +"{:,.2f}".format(days_100/30) + " months)"+'\t Optmistic: ' + "{:,.2f}".format(optimistic_days_100) +" (" +"{:,.2f}".format(optimistic_days_100/30) + " months)"))
+print("\t\tEstimated days for vaccinating 50% : "+ prYellow("{:,.2f}".format(days_50) +" (" +"{:,.2f}".format(days_50/30) + " months)"))
+print("\t\tEstimated days for vaccinating 70% : "+ prYellow("{:,.2f}".format(days_70) +" (" +"{:,.2f}".format(days_70/30) + " months)"))
+print("\t\tEstimated days for vaccinating 100% : "+ prYellow("{:,.2f}".format(days_100) +" (" +"{:,.2f}".format(days_100/30) + " months)"))
 print("\n\n\n******************************************************************************* \n\n")
 print('\n\nTime taken : '+"{:,.3f}".format(time.time()-start_time)+' seconds')
